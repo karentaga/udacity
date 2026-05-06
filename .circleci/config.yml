@@ -3,6 +3,9 @@ orbs:
   # orgs contain basc recipes and reproducible actions (install node, aws, etc.)
   node: circleci/node@5.1.0
   # different jobs are calles later in the workflows sections
+ 	eb: circleci/aws-elastic-beanstalk@2.0.1
+  aws-cli: circleci/aws-cli@3.1.1
+
 jobs:
   build:
     docker:
@@ -10,6 +13,7 @@ jobs:
       - image: "cimg/node:20.15"
     steps:
       - node/install
+      - aws-cli/setup
       - checkout
       # install dependencies in both apps
       - run:
@@ -32,3 +36,7 @@ jobs:
           name: Back-End Build
           command: |
             npm run backend:build
+      - run:
+          name: Front-End Deploy
+          command: |
+            npm run frontend:deploy
